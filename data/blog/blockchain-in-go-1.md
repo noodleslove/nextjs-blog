@@ -37,9 +37,9 @@ type Block struct {
 }
 ```
 
-`Timestamp` is the current timestamp (when the block is created), `Data` is the actual
-valuable information containing in the block, `PrevBlockHash` stores the hash of the
-previous block, and `Hash` is the hash of the block. In Bitcoint specification
+`Timestamp` is the current timestamp (when the block is created), `Data` is the
+actual valuable information containing in the block, `PrevBlockHash` stores the hash
+of the previous block, and `Hash` is the hash of the block. In Bitcoin specification
 Timestamp, PrevBlockHash, and Hash are block headers, which form a separate data
 structure, and transactions (Data in our case) is a separate data structure. So
 we're mixing them here for simplicity.
@@ -126,7 +126,9 @@ Now, we can implement a function that creates a blockchain with the genesis bloc
 
 ```go
 func NewBlockchain() *Blockchain {
-	return &Blockchain{[]*Block{NewGenesisBlock()}}
+	return &Blockchain{
+		blocks: []*Block{NewGenesisBlock()},
+	}
 }
 ```
 
