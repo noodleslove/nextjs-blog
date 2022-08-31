@@ -2,7 +2,7 @@
 title: 'Building blockchain from scratch in Go. Part 1: Basic Prototype'
 date: '2022-08-30'
 tags: ['blockchain', 'code', 'go']
-draft: true
+draft: false
 summary: In this series of articles we'll build a simplified cryptocurrency that's based on a simple blockchain implementation.
 authors: ['eddieho', 'sparrowhawk']
 ---
@@ -66,7 +66,12 @@ Next, following a Golang convention, we'll implement a function that'll simplify
 
 ```go
 func NewBlock(data string, prevBlockHash []byte) *Block {
-	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}}
+	block := &Block{
+		Timestamp:     time.Now().Unix(),
+		Data:          []byte(data),
+		PrevBlockHash: prevBlockHash,
+		Hash:          []byte{},
+	}
 	block.SetHash()
 	return block
 }
@@ -147,15 +152,15 @@ Output:
 ```sh
 Prev. hash:
 Data: Genesis Block
-Hash: aff955a50dc6cd2abfe81b8849eab15f99ed1dc333d38487024223b5fe0f1168
+Hash: 087cc5e3492e75ea05cb01a2852982b8b6c6d672c6eda2d3b65958fa387f0a8c
 
-Prev. hash: aff955a50dc6cd2abfe81b8849eab15f99ed1dc333d38487024223b5fe0f1168
+Prev. hash: 087cc5e3492e75ea05cb01a2852982b8b6c6d672c6eda2d3b65958fa387f0a8c
 Data: Send 1 BTC to Ivan
-Hash: d75ce22a840abb9b4e8fc3b60767c4ba3f46a0432d3ea15b71aef9fde6a314e1
+Hash: 55c566c351b5e391208adcf9ee99c4d734bd83359b2667058bc736379aa5dbd8
 
-Prev. hash: d75ce22a840abb9b4e8fc3b60767c4ba3f46a0432d3ea15b71aef9fde6a314e1
+Prev. hash: 55c566c351b5e391208adcf9ee99c4d734bd83359b2667058bc736379aa5dbd8
 Data: Send 2 more BTC to Ivan
-Hash: 561237522bb7fcfbccbc6fe0e98bbbde7427ffe01c6fb223f7562288ca2295d1
+Hash: a8e8ce10de294fd4dc18a7a533302eb4c8822168776ad6002b5d4b5d6de1bfa4
 ```
 
 That's it!
