@@ -5,7 +5,7 @@ const siteMetadata = {
   description: 'A blog about blockchain and data engineering 🌱',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  siteUrl: 'https://edwinho.online',
   siteRepo: 'https://github.com/noodleslove/nextjs-blog',
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
