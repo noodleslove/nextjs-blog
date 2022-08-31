@@ -19,12 +19,14 @@ introduction.
 
 ## Block
 
-Let's start with the “block” part of “blockchain”. In blockchain it's blocks that
+Let's start with the "block" part of "blockchain". In blockchain it's blocks that
 store valuable information. For example, bitcoin blocks store transactions, the
 essence of any cryptocurrency. Besides this, a block contains some technical
 information, like its version, current timestamp and the hash of the previous block.
 
-In this article we're not going to implement the block as it's described in blockchain or Bitcoin specifications, instead we'll use a simplified version of it, which contains only significant information. Here's what it looks like:
+In this post we're not going to implement the block as it's described in
+blockchain or Bitcoin specifications, but rather a reduced version of it that
+contains just important information. This is how it appears:
 
 ```go
 type Block struct {
@@ -35,22 +37,22 @@ type Block struct {
 }
 ```
 
-Timestamp is the current timestamp (when the block is created), Data is the actual
-valuable information containing in the block, PrevBlockHash stores the hash of the
-previous block, and Hash is the hash of the block. In Bitcoint specification
+`Timestamp` is the current timestamp (when the block is created), `Data` is the actual
+valuable information containing in the block, `PrevBlockHash` stores the hash of the
+previous block, and `Hash` is the hash of the block. In Bitcoint specification
 Timestamp, PrevBlockHash, and Hash are block headers, which form a separate data
 structure, and transactions (Data in our case) is a separate data structure. So
 we're mixing them here for simplicity.
 
-So how do we calculate the hashes? The way hashes are calculates is very important
-feature of blockchain, and it's this feature that makes blockchain secure. The thing
-is that calculating a hash is a computationally difficult operation, it takes some
-time even on fast computers (that's why people buy powerful GPUs to mine Bitcoin).
-This is an intentional architectural design, which makes adding new blocks
-difficult, thus preventing their modification after they're added. We'll discuss and
-implement this mechanism in a future article.
+So, how do we compute hashes? The method by which hashes are calculated is a
+critical component of blockchain, and it is this property that makes blockchain
+secure. The problem is that computing a hash is a computationally demanding activity
+that takes time even on fast computers (which is why people buy powerful GPUs to
+mine Bitcoin). This is a purposeful architectural style that makes adding new blocks
+difficult, prohibiting them from being modified after they are added.
 
-For now, we'll just take block fields, concatenate them, and calculate a SHA-256 hash on the concatenated combination. Let's do this in SetHash method:
+For now, we'll just take block fields, concatenate them, and calculate a SHA-256
+hash on the concatenated combination. Let's do this in SetHash method:
 
 ```go
 func (b *Block) SetHash() {
@@ -62,7 +64,8 @@ func (b *Block) SetHash() {
 }
 ```
 
-Next, following a Golang convention, we'll implement a function that'll simplify the creation of a block:
+Next, following a Golang convention, we'll implement a function that'll simplify
+the creation of a block:
 
 ```go
 func NewBlock(data string, prevBlockHash []byte) *Block {
@@ -98,8 +101,6 @@ type Blockchain struct {
 }
 ```
 
-This is our first blockchain! I've never thought it would be so easy 😉
-
 Now let's make it possible to add blocks to it:
 
 ```go
@@ -112,7 +113,7 @@ func (bc *Blockchain) AddBlock(data string) {
 
 To add a new block we need an existing block, but there're not blocks in our
 blockchain! So, in any blockchain, there must be at least one block, and such block,
-the first in the chain, is called genesis block. Let's implement a method that
+the first in the chain, is called **genesis block**. Let's implement a method that
 creates such a block:
 
 ```go
@@ -167,14 +168,22 @@ That's it!
 
 ## Conclusion
 
-We built a very simple blockchain prototype: it's just an array of blocks, with each block having a connection to the previous one. The actual blockchain is much more complex though. In our blockchain adding new blocks is easy and fast, but in real blockchain adding new blocks requires some work: one has to perform some heavy computations before getting a permission to add block (this mechanism is called Proof-of-Work). Also, blockchain is a distributed database that has no single decision maker. Thus, a new block must be confirmed and approved by other participants of the network (this mechanism is called consensus). And there're no transactions in our blockchain yet!
+We built a very simple blockchain prototype: it's just an array of blocks, with each
+block having a connection to the previous one. The actual blockchain is much more
+complex though. In our blockchain adding new blocks is easy and fast, but in real
+blockchain adding new blocks requires some work: one has to perform some heavy
+computations before getting a permission to add block (this mechanism is called
+Proof-of-Work). Also, blockchain is a distributed database that has no single
+decision maker. Thus, a new block must be confirmed and approved by other
+participants of the network (this mechanism is called consensus). And there're no
+transactions in our blockchain yet!
 
-In future articles we'll cover each of these features.
+In future posts we'll cover each of these features.
 
 ## References
+
+[Full Source Code](https://github.com/noodleslove/blockchain-go/tree/part_1)
 
 [An Introduction to Blockchain](https://www.cpajournal.com/2021/08/18/an-introduction-to-blockchain/)
 
 [Building Blockchain in Go](https://jeiwan.net/posts/building-blockchain-in-go-part-1/)
-
-[Full Source Code](https://github.com/noodleslove/blockchain-go/tree/part_1)
