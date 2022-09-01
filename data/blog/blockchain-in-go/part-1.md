@@ -7,6 +7,8 @@ summary: In this series of articles we'll build a simplified cryptocurrency that
 authors: ['eddieho', 'sparrowhawk']
 ---
 
+<TOCInline toc={props.toc} asDisclosure />
+
 ## Introduction
 
 Bitcoin was introduced to the world under a cloud of mystery in January 2009. A
@@ -182,7 +184,7 @@ transactions in our blockchain yet!
 
 In future posts we'll cover each of these features.
 
-## References
+**References:**
 
 [Full Source Code](https://github.com/noodleslove/blockchain-go/tree/part_1)
 
