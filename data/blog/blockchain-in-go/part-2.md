@@ -349,3 +349,5 @@ PoW: true
 [Proof of Work (PoW)](<https://www.investopedia.com/terms/p/proof-work.asp#:~:text=Proof%20of%20work%20(PoW)%20is,transactions%20and%20mining%20new%20tokens>)
 
 [Hashcash](https://en.wikipedia.org/wiki/Hashcash#:~:text=Hashcash%20is%20a%20proof%2Dof,part%20of%20the%20mining%20algorithm.)
+
+[Building Blockchain in Go](https://jeiwan.net/posts/building-blockchain-in-go-part-2/)
