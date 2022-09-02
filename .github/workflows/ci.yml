@@ -48,3 +48,8 @@ jobs:
         with:
           push: true
           tags: noodleslove/nextjs-blog:latest
+          secrets: |
+            "NEXT_PUBLIC_GISCUS_REPO=${{ secrets.NEXT_PUBLIC_GISCUS_REPO }}"
+            "NEXT_PUBLIC_GISCUS_REPOSITORY_ID=${{ secrets.NEXT_PUBLIC_GISCUS_REPOSITORY_ID }}"
+            "NEXT_PUBLIC_GISCUS_CATEGORY=${{ secrets.NEXT_PUBLIC_GISCUS_CATEGORY }}"
+            "NEXT_PUBLIC_GISCUS_CATEGORY_ID=${{ secrets.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}"
