@@ -1,5 +1,5 @@
 ---
-title: 'Building blockchain from scratch in Go. Part 1: Basic Prototype'
+title: 'Building blockchain in Go. Part 1: Basic Prototype'
 date: '2022-08-30'
 tags: ['blockchain', 'code', 'go']
 draft: false

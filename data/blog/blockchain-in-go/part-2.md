@@ -1,6 +1,6 @@
 ---
-title: 'Building blockchain from scratch in Go. Part 2: Proof of Work'
-date: '2022-09-02'
+title: 'Building blockchain in Go. Part 2: Proof of Work'
+date: '2022-09-01'
 tags: ['blockchain', 'code', 'go']
 draft: false
 summary: In this series of articles we'll build a simplified cryptocurrency that's based on a simple blockchain implementation.
