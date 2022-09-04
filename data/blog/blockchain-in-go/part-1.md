@@ -2,6 +2,7 @@
 title: 'Building blockchain in Go. Part 1: Basic Prototype'
 date: '2022-08-30'
 tags: ['blockchain', 'code', 'go']
+lastmod: '2022-09-04'
 draft: false
 summary: In this series of articles we'll build a simplified cryptocurrency that's based on a simple blockchain implementation.
 authors: ['eddieho', 'sparrowhawk']

@@ -2,8 +2,9 @@
 title: 'Building blockchain in Go. Part 3: Persistence and CLI'
 date: '2022-09-02'
 tags: ['blockchain', 'code', 'go']
+lastmod: '2022-09-04'
 draft: false
-summary: In this series of articles we'll build a simplified cryptocurrency that's based on a simple blockchain implementation.
+summary: In this series of articles we’ll build a simplified cryptocurrency that’s based on a simple blockchain implementation.
 authors: ['eddieho']
 ---
 
@@ -11,12 +12,12 @@ authors: ['eddieho']
 
 ## Introduction
 
-So far, we've built a blockchain with Proof-of-Work (PoW) censensus, which allows
+So far, we’ve built a blockchain with Proof-of-Work (PoW) censensus, which allows
 for mining. Our solution is coming closer to being a fully functional blockchain,
-but it is still missing several key functionality. Today, we'll begin storing a
-blockchain in a database, and then we'll create a simple command-line interface to
+but it is still missing several key functionality. Today, we’ll begin storing a
+blockchain in a database, and then we’ll create a simple command-line interface to
 do blockchain activities. Blockchain is essentially a distributed database. For the
-time being, we'll ignore the "distributed" aspect and concentrate on the "database"
+time being, we’ll ignore the “distributed” aspect and concentrate on the “database”
 component.
 
 ## Database Choice
@@ -31,30 +32,30 @@ mentions utilizing a specific database, hence it is up to a developer to decide
 which DB to use. [LevelDB](https://github.com/google/leveldb) is used by
 [Bitcoin Core](https://github.com/bitcoin/bitcoin), which was first published by
 Satoshi Nakamoto and is now a reference implementation of Bitcoin (although it was
-introduced to the client only in 2012). And we'll employ...
+introduced to the client only in 2012). And we’ll employ...
 
 ## BoltDB
 
 Because:
 
-1. It's simple and minimalistic.
-2. It's implemented in Go.
-3. It doesn't require to run a server.
+1. It’s simple and minimalistic.
+2. It’s implemented in Go.
+3. It doesn’t require to run a server.
 4. It allows to build the data structure we want.
 
-From the BoltDB's [README on Github](https://github.com/boltdb/bolt):
+From the BoltDB’s [README on Github](https://github.com/boltdb/bolt):
 
-> Bolt is a pure Go key/value store inspired by Howard Chu's LMDB project. The goal
+> Bolt is a pure Go key/value store inspired by Howard Chu’s LMDB project. The goal
 > of the project is to provide a simple, fast, and reliable database for projects
-> that don't require a full database server such as Postgres or MySQL.
+> that don’t require a full database server such as Postgres or MySQL.
 
 > Since Bolt is meant to be used as such a low-level piece of functionality,
 > simplicity is key. The API will be small and only focus on getting values and
-> setting values. That's it.
+> setting values. That’s it.
 
-Sounds perfect for our needs! Let's spend a minute reviewing it.
+Sounds perfect for our needs! Let’s spend a minute reviewing it.
 
-BoltDB is a key/value storage, which means there're no tables like in SQL RDBMS
+BoltDB is a key/value storage, which means there’re no tables like in SQL RDBMS
 (MySQL, PostgreSQL, etc.), no rows, no columns. Instead, data is stored as key-value
 pairs (like in Golang maps). Key-value pairs are stored in buckets, which are
 intended to group similar pairs (this is similar to tables in RDBMS). Thus, in order
@@ -62,8 +63,8 @@ to get a value, you need to know a bucket and a key.
 
 ## Database Structure
 
-Before starting implementing persistence logic, we first need to decide how we'll
-store data in the DB. And for this, we'll refer to the way Bitcoin Core does that.
+Before starting implementing persistence logic, we first need to decide how we’ll
+store data in the DB. And for this, we’ll refer to the way Bitcoin Core does that.
 
 In simple words, Bitcoin Core uses two "buckets" to store data:
 
@@ -76,7 +77,7 @@ In `blocks`, the `key -> value` pairs are:
 1. 'b' + 32-byte block hash -> block index record
 2. 'f' + 4-byte file number -> file information record
 3. 'l' -> 4-byte file number: the last block file number used
-4. 'R' -> 1-byte boolean: whether we're in the process of reindexing
+4. 'R' -> 1-byte boolean: whether we’re in the process of reindexing
 5. 'F' + 1-byte flag name length + flag name string -> 1 byte boolean: various
    flags that can be on or off
 6. 't' + 32-byte transaction hash -> transaction index record
@@ -398,7 +399,7 @@ func main() {
 
 And that’s it! Let’s check that everything works as expected:
 
-```sh
+```shell
 $ ./blockchain-go printchain
 No existing blockchain found. Creating a new one...
 Mining the block containing "Genesis Block"
