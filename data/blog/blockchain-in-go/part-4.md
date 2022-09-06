@@ -14,7 +14,7 @@ authors: ['eddieho']
 
 Transactions are the heart of Bitcoin and the only purpose of blockchain is to store transactions in a secure and reliable way, so no one could modify them after they are created. Today we’re starting implementing transactions. But because this is quite a big topic, I’ll split it into two parts: in this part, we’ll implement the general mechanism of transactions and in the second part we’ll work through details.
 
-Also, since code changes are massive, it makes no sense describing all of them here. You can see all the changes here.
+Also, since code changes are massive, it makes no sense describing all of them here. You can see all the changes [here](https://github.com/noodleslove/blockchain-go/pull/4/files).
 
 ## Bitcoin Transaction
 
