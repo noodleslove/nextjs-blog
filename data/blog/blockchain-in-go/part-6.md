@@ -3,7 +3,7 @@ title: 'Building blockchain in Go. Part 6: Transactions 2'
 date: '2022-09-16'
 tags: ['blockchain', 'code', 'go']
 lastmod: '2022-09-16'
-draft: true
+draft: false
 summary: In this series of articles we’ll build a simplified cryptocurrency that’s based on a simple blockchain implementation.
 authors: ['eddieho']
 ---
@@ -319,12 +319,175 @@ And the UTXO set is updated after a new block is mined.
 
 Let’s check that it works
 
+```shell
+$ ./blockchain-go createblockchain -address 178vmmuHgj54fzK1cgYvTdJkjWBtfFHFzw
+0000103b30fac8ef92bf70823fc541435caa4fd0e9f2fb0ebd58075356c312b6
+
+Done!
+
+$ ./blockchain-go send -from 178vmmuHgj54fzK1cgYvTdJkjWBtfFHFzw -to 1KySbPGvNVE4rf57ehtMAKB2HFEgJyNvsE -amount 6
+000013d1a6f62380c2e2c8c6a6a12b879fd207663c8a494a58875e496cba554a
+
+Success!
+
+$ ./blockchain-go send -from 178vmmuHgj54fzK1cgYvTdJkjWBtfFHFzw -to 1McmeAmzBcFjQvVjH6ZmMWSM8UuXKzTqck -amount 6
+0000117c5fabadab330bd7a9c75db12b33dda7918838995ae0aecfc9286331c9
+
+Success!
+
+$ ./blockchain-go getbalance -address 178vmmuHgj54fzK1cgYvTdJkjWBtfFHFzw
+Balance of '178vmmuHgj54fzK1cgYvTdJkjWBtfFHFzw': 8
+
+$ ./blockchain-go getbalance -address 1KySbPGvNVE4rf57ehtMAKB2HFEgJyNvsE
+Balance of '1KySbPGvNVE4rf57ehtMAKB2HFEgJyNvsE': 6
+
+$ ./blockchain-go getbalance -address 1McmeAmzBcFjQvVjH6ZmMWSM8UuXKzTqck
+Balance of '1McmeAmzBcFjQvVjH6ZmMWSM8UuXKzTqck': 6
+```
+
+Nice! The 1JnMDSqVoHi4TEFXNw5wJ8skPsPf4LHkQ1 address received reward 3 times:
+
+1. Once for mining the genesis blocks.
+1. Once for mining the block `0000001f75cb3a5033aeecbf6a8d378e15b25d026fb0a665c7721a5bb0faa21b`
+1. And once for mining the block `000000cc51e665d53c78af5e65774a72fc7b864140a8224bf4e7709d8e0fa433`
+
 ## Merkle Tree
 
+There’s one more optimization mechanism I’d like to discuss in this post.
+
+As it was said above, the full Bitcoin database (i.e., blockchain) takes more than 140 Gb of disk space. Because of the decentralized nature of Bitcoin, every node in the network must be independent and self-sufficient, i.e. every node must store a full copy of the blockchain. With many people starting using Bitcoin, this rule becomes more difficult to follow: it’s not likely that everyone will run a full node. Also, since nodes are full-fledged participants of the network, they have responsibilities: they must verify transactions and blocks. Also, there’s certain internet traffic required to interact with other nodes and download new blocks.
+
+In the [original Bitcoin paper](https://bitcoin.org/bitcoin.pdf) published by Satoshi Nakamoto, there was a solution for this problem: Simplified Payment Verification (SPV). SPV is a light Bitcoin node that doesn’t download the whole blockchain and **doesn’t verify blocks and transactions**. Instead, it finds transactions in blocks (to verify payments) and is linked to a full node to retrieve just necessary data. This mechanism allows having multiple light wallet nodes with running just one full node.
+
+For SPV to be possible, there should be a way to check if a block contains certain transaction without downloading the whole block. And this is where Merkle tree comes into play.
+
+Merkle trees are used by Bitcoin to obtain transactions hash, which is then saved in block headers and is considered by the proof-of-work system. Until now, we just concatenated hashes of each transaction in a block and applied SHA-256 to them. This is also a good way of getting a unique representation of block transactions, but it doesn’t have benefits of Merkle trees.
+
+Let’s look at a Merkle tree:
+
+![Merkle tree diagram](/static/images/blockchain-in-go/merkle-tree-diagram.png)
+
+A Merkle tree is built for each block, and it starts with leaves (the bottom of the tree), where a leaf is a transaction hash (Bitcoins uses double SHA256 hashing). The number of leaves must be even, but not every block contains an even number of transactions. In case there is an odd number of transactions, the last transaction is duplicated (in the Merkle tree, not in the block!).
+
+Moving from the bottom up, leaves are grouped in pairs, their hashes are concatenated, and a new hash is obtained from the concatenated hashes. The new hashes form new tree nodes. This process is repeated until there’s just one node, which is called the root of the tree. The root hash is then used as the unique representation of the transactions, is saved in block headers, and is used in the proof-of-work system.
+
+The benefit of Merkle trees is that a node can verify membership of certain transaction without downloading the whole block. Just a transaction hash, a Merkle tree root hash, and a Merkle path are required for this.
+
+Finally, let’s write code:
+
+```go
+// pkg/merkletree/merkle_node.go
+
+type MerkleNode struct {
+	Left  *MerkleNode
+	Right *MerkleNode
+	Data  []byte
+}
+```
+
+```go
+// pkg/merkletree/merkle_tree.go
+
+type MerkleTree struct {
+	RootNode *MerkleNode
+}
+```
+
+We start with structs. Every `MerkleNode` keeps data and links to its branches. `MerkleTree` is actually the root node linked to the next nodes, which are in their turn linked to further nodes, etc.
+
+Let’s create a new node first:
+
+```go
+// pkg/merkletree/merkle_node.go
+
+func NewMerkleNode(left, right *MerkleNode, data []byte) *MerkleNode {
+	mNode := MerkleNode{}
+
+	if left == nil && right == nil {
+		hash := sha256.Sum256(data)
+		mNode.Data = hash[:]
+	} else {
+		prevHashes := append(left.Data, right.Data...)
+		hash := sha256.Sum256(prevHashes)
+		mNode.Data = hash[:]
+	}
+
+	mNode.Left = left
+	mNode.Right = right
+
+	return &mNode
+}
+```
+
+Every node contains some data. When a node is a leaf, the data is passed from the outside (a serialized transaction in our case). When a node is linked to other nodes, it takes their data and concatenates and hashes it.
+
+```go
+// pkg/merkletree/merkle_tree.go
+
+func NewMerkleTree(data [][]byte) *MerkleTree {
+	var nodes []MerkleNode
+
+	if len(data)%2 != 0 {
+		data = append(data, data[len(data)-1])
+	}
+
+	for _, datum := range data {
+		node := NewMerkleNode(nil, nil, datum)
+		nodes = append(nodes, *node)
+	}
+
+	for i := 0; i < len(data)/2; i++ {
+		var newLevel []MerkleNode
+
+		for j := 0; j < len(nodes); j += 2 {
+			node := NewMerkleNode(&nodes[j], &nodes[j+1], nil)
+			newLevel = append(newLevel, *node)
+		}
+
+		nodes = newLevel
+	}
+
+	mTree := MerkleTree{&nodes[0]}
+
+	return &mTree
+}
+```
+
+When a new tree is created, the first thing to ensure is that there is an even number of leaves. After that, data (which is an array of serialized transactions) is converted into tree leaves, and a tree is grown from these leaves.
+
+Now, let’s modify `Block.HashTransactions`, which is used in the proof-of-work system to obtain transactions hash:
+
+```go
+// pkg/blockchain/block.go
+
+func (b *Block) HashTransactions() []byte {
+	var transactions [][]byte
+
+	for _, tx := range b.Transactions {
+		transactions = append(transactions, tx.Serialize())
+	}
+	mTree := merkletree.NewMerkleTree(transactions)
+
+	return mTree.RootNode.Data
+}
+```
+
+First, transactions are serialized (using `encoding/gob`), and then they are used to build a Merkle tree. The root of the tree will serve as the unique identifier of block’s transactions.
+
 ## Conclusion
+
+And that’s it! We’ve implemented almost all key feature of a blockchain-based cryptocurrency. We have blockchain, addresses, mining, and transactions. But there’s one more thing that gives life to all these mechanisms and makes Bitcoin a global system: consensus. In the next article, we’ll start implementing the “decentralized” part of the blockchain. Stay tuned!
 
 **References:**
 
 [Full source code](https://edwinho.online/blog/blockchain-in-go/part-6)
 
 [Blockchain in Go](https://jeiwan.net/posts/building-blockchain-in-go-part-6/)
+
+[The UTXO Set](<https://en.bitcoin.it/wiki/Bitcoin_Core_0.11_(ch_2):_Data_Storage#The_UTXO_set_.28chainstate_leveldb.29>)
+
+[Merkle tree](https://en.bitcoin.it/wiki/Protocol_documentation#Merkle_Trees)
+
+[UTXO set statistics](https://statoshi.info/dashboard/db/unspent-transaction-output-set)
+
+[Smart contracts and Bitcoin](https://medium.com/@maraoz/smart-contracts-and-bitcoin-a5d61011d9b1)
