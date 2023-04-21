@@ -11,6 +11,12 @@ const projectsData = [
     imgSrc: '/static/images/blockchain.jpg',
     href: 'https://github.com/noodleslove/blockchain-go',
   },
+  {
+    title: 'Jable Tv Notification Service',
+    description: `An awesome web scraper powered by CloudScraper to collect video data from jable.tv`,
+    imgSrc: '/static/images/jable.png',
+    href: 'https://github.com/noodleslove/jable-py',
+  },
 ]
 
 export default projectsData
