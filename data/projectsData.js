@@ -1,17 +1,21 @@
 const projectsData = [
   {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
+    title: 'House of Representatives Analysis',
+    description: `This project uses public data about the stock trades made by members of the US House of Representatives.`,
+    imgSrc: '/static/images/stock.png',
+    href: 'https://github.com/noodleslove/House-of-Representative-Analysis-I',
   },
   {
     title: 'Blockchain in Go',
     description: `A simplified blockchain implementation in Golang`,
     imgSrc: '/static/images/blockchain.jpg',
     href: 'https://github.com/noodleslove/blockchain-go',
+  },
+  {
+    title: 'Jable Tv Notification Service',
+    description: `An awesome web scraper powered by CloudScraper to collect video data from jable.tv`,
+    imgSrc: '/static/images/jable.png',
+    href: 'https://github.com/noodleslove/jable-py',
   },
 ]
 
