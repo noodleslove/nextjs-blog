@@ -1,6 +1,6 @@
 ---
 name: Eddie Ho
-avatar: /static/images/profile.png
+avatar: /static/images/profile.jpeg
 occupation: Student of Data Science
 company: University California, San Diego
 email: edwin.ho.bj@gmail.com
