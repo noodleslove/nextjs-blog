@@ -1,5 +1,12 @@
 const projectsData = [
   {
+    title: 'NutriPal',
+    description:
+      'NutriPal is a user-friendly diet information website that aims to simplify the daily diet logging process.',
+    imgSrc: '/static/images/nutri-pal.jpg',
+    href: 'https://github.com/noodleslove/nutriPal',
+  },
+  {
     title: 'House of Representatives Analysis',
     description: `This project uses public data about the stock trades made by members of the US House of Representatives.`,
     imgSrc: '/static/images/stock.png',
