@@ -2,7 +2,7 @@ const siteMetadata = {
   title: 'CodeBook',
   author: 'Eddie Ho',
   headerTitle: 'CodeBook',
-  description: 'A blog about blockchain and data engineering 🌱',
+  description: 'A blog about blockchain, machine learning, and data engineering 🌱',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://edwinho.online',
