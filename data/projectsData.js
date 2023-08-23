@@ -30,7 +30,7 @@ const projectsData = [
     title: 'House of Representatives Analysis I',
     description:
       'This project analyzes stock trades made by members of the 116th U.S. House of Representatives, combining it with information on their political affiliation to evaluate missingness associations in the dataset.',
-    imgSrc: '/static/images/stock.png',
+    imgSrc: '/static/images/stock.jpg',
     href: 'https://drive.google.com/file/d/1M3fHZAFZXAAp5A9QwROB91KcIcK2SG03/view?usp=sharing',
   },
   {
