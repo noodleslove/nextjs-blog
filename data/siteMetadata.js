@@ -13,7 +13,7 @@ const siteMetadata = {
   email: 'edwin.ho.bj@gmail.com',
   github: 'https://github.com/noodleslove',
   twitter: 'https://twitter.com/doublemay33',
-  linkedin: 'https://linkedin.com/in/bojian-eddie-ho-16268019b',
+  linkedin: 'https://www.linkedin.com/in/eddie-bojian-ho-16268019b/',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the

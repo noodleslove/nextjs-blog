@@ -13,6 +13,12 @@ const projectsData = [
     href: 'https://github.com/noodleslove/nutriPal',
   },
   {
+    title: 'COVID-19 Analysis',
+    description: 'Analysis on impact of the COVID-19 pandemic on global warming',
+    imgSrc: '/static/images/covid.jpg',
+    href: 'https://drive.google.com/file/d/1Vt1BsArRcmB9PU4JPViPP8tBLWDt1QkI/view?usp=sharing',
+  },
+  {
     title: 'LFM Recommender System',
     description:
       'A Yelp Recommender System using Latent Factor Collaborative Filtering to provide personalized business recommendations through a web application, enhancing user experience and engagement.',
