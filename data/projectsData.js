@@ -1,9 +1,9 @@
 const projectsData = [
   {
-    title: 'Capstone Project: EthStates (🚧 in progress)',
+    title: 'EthStates',
     description: `A decentralized application that allows users to create and trade synthetic assets on the Ethereum blockchain.`,
     imgSrc: '/static/images/ethstates.jpg',
-    href: 'https://github.com/YLSphere/DSC180_ethstates',
+    href: 'https://github.com/noodleslove/DSC180_ethstates',
   },
   {
     title: 'UCSD CSES Website',
